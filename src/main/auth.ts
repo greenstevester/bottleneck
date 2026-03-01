@@ -316,9 +316,6 @@ export class GitHubAuth {
   // }
 
   async getToken(): Promise<string | null> {
-<<<<<<< HEAD
-    const auth = this.store.get("github_auth") as AuthToken | undefined;
-=======
     // First check for environment variables
     const envToken = process.env.GITHUB_TOKEN || process.env.GITHUB_PERSONAL_ACCESS_TOKEN;
     if (envToken) {
@@ -326,7 +323,6 @@ export class GitHubAuth {
     }
 
     const auth = this.store.get('github_auth') as AuthToken | undefined;
->>>>>>> 8ed7066 (local changes)
 
     if (!auth) {
       return null;
