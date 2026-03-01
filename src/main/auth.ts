@@ -18,7 +18,31 @@ export class GitHubAuth {
   }
 
   async authenticate(): Promise<string> {
-    // Check if we have a stored token first
+    // First check for environment variables
+    const envToken = process.env.GITHUB_TOKEN || process.env.GITHUB_PERSONAL_ACCESS_TOKEN;
+    if (envToken) {
+      console.log('Found GitHub token in environment variables');
+      // Validate the token
+      try {
+        const octokit = new Octokit({ auth: envToken });
+        const { data: user } = await octokit.users.getAuthenticated();
+        console.log(`Authenticated via environment variable as ${user.login}`);
+
+        // Store the token for consistency with the app's token management
+        const authToken: AuthToken = {
+          token: envToken,
+          type: 'pat'
+        };
+        this.store.set('github_auth', authToken);
+
+        return envToken;
+      } catch (error) {
+        console.error('Environment variable token is invalid:', error);
+        // Continue to next auth method if env token is invalid
+      }
+    }
+
+    // Check if we have a stored token
     const existingToken = await this.getToken();
     if (existingToken) {
       // Validate the token
@@ -32,7 +56,7 @@ export class GitHubAuth {
       }
     }
 
-    // Use Personal Access Token approach
+    // Use Personal Access Token approach with UI prompt
     return await this.personalAccessTokenAuth();
   }
 
@@ -292,7 +316,17 @@ export class GitHubAuth {
   // }
 
   async getToken(): Promise<string | null> {
+<<<<<<< HEAD
     const auth = this.store.get("github_auth") as AuthToken | undefined;
+=======
+    // First check for environment variables
+    const envToken = process.env.GITHUB_TOKEN || process.env.GITHUB_PERSONAL_ACCESS_TOKEN;
+    if (envToken) {
+      return envToken;
+    }
+
+    const auth = this.store.get('github_auth') as AuthToken | undefined;
+>>>>>>> 8ed7066 (local changes)
 
     if (!auth) {
       return null;
@@ -325,7 +359,8 @@ export class GitHubAuth {
     this.store.delete("github_auth");
   }
 
-  isAuthenticated(): boolean {
-    return this.getToken() !== null;
+  async isAuthenticated(): Promise<boolean> {
+    const token = await this.getToken();
+    return token !== null;
   }
 }

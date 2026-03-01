@@ -53,6 +53,7 @@ export default function AuthView() {
 
         <div className="card p-8">
           <div className="text-center mb-6">
+<<<<<<< HEAD
             <Github
               className={cn(
                 "w-16 h-16 mx-auto mb-4",
@@ -75,6 +76,20 @@ export default function AuthView() {
             >
               Sign in with your GitHub Personal Access Token
             </p>
+=======
+            <Github className={cn(
+              "w-16 h-16 mx-auto mb-4",
+              theme === 'dark' ? "text-gray-400" : "text-gray-600"
+            )} />
+            <h2 className={cn(
+              "text-2xl font-semibold",
+              theme === 'dark' ? "text-white" : "text-gray-900"
+            )}>Welcome</h2>
+            <p className={cn(
+              "mt-2",
+              theme === 'dark' ? "text-gray-400" : "text-gray-600"
+            )}>Authenticating with GitHub</p>
+>>>>>>> 8ed7066 (local changes)
           </div>
 
           {error && (
